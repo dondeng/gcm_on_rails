@@ -17,9 +17,11 @@ Jeweler::Tasks.new do |gem|
   gem.name = "gcm_on_rails"
   gem.homepage = "http://github.com/dondeng/gcm_on_rails"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
-  gem.email = "dennis@kopokopo.com"
+  gem.summary = %Q{Google Cloud Messaging for Android on Rails}
+  gem.description = %Q{gcm_on_rails is a Ruby on Rails gem that allows you to easily incorporate Google's
+                    'Google Cloud Messaging for Android' into your Rails application. This gem was derived from
+                    c2dm_on_rails (https://github.com/pimeys/c2dm_on_rails) after Google deprecated C2DM on June 27, 2012}
+  gem.email = "dondeng2@gmail.com"
   gem.authors = ["Dennis Ondeng"]
   # dependencies defined in Gemfile
 end
