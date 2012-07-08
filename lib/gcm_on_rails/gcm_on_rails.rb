@@ -72,7 +72,6 @@ module Gcm
         super("The was an internal error in the GCM server while trying to process the request: '#{message}'")
       end
     end
-
   end
 
   Dir.glob(File.join(File.dirname(__FILE__), 'app', 'models', 'gcm', '*.rb')).sort.each do |f|

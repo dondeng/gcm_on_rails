@@ -4,10 +4,11 @@ class CreateGcmNotifications < ActiveRecord::Migration # :nodoc:
 
     create_table :gcm_notifications do |t|
       t.integer :device_id, :null => false
-      t.string :collapse_key, :null => false
+      t.string :collapse_key
       t.text :data
       t.boolean :delay_while_idle
       t.datetime :sent_at
+      t.integer :time_to_live
       t.timestamps
     end
 

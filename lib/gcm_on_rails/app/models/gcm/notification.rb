@@ -6,6 +6,7 @@ class Gcm::Notification < Gcm::Base
   serialize :data
 
   belongs_to :device, :class_name => 'Gcm::Device'
+  validates_presence_of :collapse_key if :time_to_live?
 
   class << self
     # Opens a connection to the Google GCM server and attempts to batch deliver
@@ -21,43 +22,59 @@ class Gcm::Notification < Gcm::Base
     # This can be run from the following Rake task:
     #   $ rake gcm:notifications:deliver
     def send_notifications(notifications = Gcm::Notification.all(:conditions => {:sent_at => nil}, :joins => :device, :readonly => false))
+
+      if configatron.gcm_on_rails.delivery_format and configatron.gcm_on_rails.delivery_format == 'plain_text'
+        format = "plain_text"
+      else
+        format = "json"
+      end
+
       unless notifications.nil? || notifications.empty?
-        Gcm::Connection.open do |api_key|
-          notifications.each do |noty|
-            puts "sending notification #{noty.id} to device #{noty.device.registration_id}"
-            response = Gcm::Connection.send_notification(noty, api_key)
+        api_key = Gcm::Connection.open
+        if api_key
+          notifications.each do |notification|
+            puts "sending notification #{notification.id} to device #{notification.device.registration_id}"
+            response = Gcm::Connection.send_notification(notification, api_key, format)
             puts "response: #{response[:code]}; #{response.inspect}"
             if response[:code] == 200
-              case response[:message]
-                when "Error=MissingRegistration"
+              if format == "json"
+                message_data = JSON.parse response[:message]
+                error = message_data[:error]
+              else
+                message_data = response[:message]
+                error = response[:message].split('=')[1]
+              end
+              case error
+                when "MissingRegistration"
                   ex = Gcm::Errors::MissingRegistration.new(response[:message])
-                  logger.warn("#{ex.message}, destroying gcm_device with id #{noty.device.id}")
-                  noty.device.destroy
-                when "Error=InvalidRegistration"
+                  logger.warn("#{ex.message}, destroying gcm_device with id #{notification.device.id}")
+                  notification.device.destroy
+                when "InvalidRegistration"
                   ex = Gcm::Errors::InvalidRegistration.new(response[:message])
-                  logger.warn("#{ex.message}, destroying gcm_device with id #{noty.device.id}")
-                  noty.device.destroy
-                when "Error=MismatchedSenderId"
+                  logger.warn("#{ex.message}, destroying gcm_device with id #{notification.device.id}")
+                  notification.device.destroy
+                when "MismatchedSenderId"
                   ex = Gcm::Errors::MismatchSenderId.new(response[:message])
                   logger.warn(ex.message)
-                when "Error=NotRegistered"
+                when "NotRegistered"
                   ex = Gcm::Errors::NotRegistered.new(response[:message])
-                  logger.warn("#{ex.message}, destroying gcm_device with id #{noty.device.id}")
-                  noty.device.destroy
-                when "Error=MessageTooBig"
+                  logger.warn("#{ex.message}, destroying gcm_device with id #{notification.device.id}")
+                  notification.device.destroy
+                when "MessageTooBig"
                   ex = Gcm::Errors::MessageTooBig.new(response[:message])
                   logger.warn(ex.message)
                 else
-                  noty.sent_at = Time.now
-                  noty.save!
+                  notification.sent_at = Time.now
+                  notification.save!
               end
             elsif response[:code] == 401
-              raise Gcm::Errors::InvalidAuthToken.new(response[:message])
+              raise Gcm::Errors::InvalidAuthToken.new(message_data)
             elsif response[:code] == 503
-              raise Gcm::Errors::ServiceUnavailable.new(response[:message])
+              raise Gcm::Errors::ServiceUnavailable.new(message_data)
             elsif response[:code] == 500
-              raise Gcm::Errors::InternalServerError.new(response[:message])
+              raise Gcm::Errors::InternalServerError.new(message_data)
             end
+
           end
         end
       end

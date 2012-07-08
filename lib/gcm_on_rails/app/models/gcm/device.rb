@@ -8,7 +8,7 @@
 #
 # Example:
 #   Device.create(:registration_id => 'FOOBAR')
-class Gcm::Devise < Gcm::Base
+class Gcm::Device < Gcm::Base
   self.table_name = "gcm_devices"
 
   has_many :notifications, :class_name => 'Gcm::Notification', :dependent => :destroy
