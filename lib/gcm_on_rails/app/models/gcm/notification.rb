@@ -38,12 +38,16 @@ class Gcm::Notification < Gcm::Base
             puts "response: #{response[:code]}; #{response.inspect}"
             if response[:code] == 200
               if format == "json"
+                error = ""
                 message_data = JSON.parse response[:message]
-                error = message_data[:error]
-              else
+                success = message_data['success']
+                error = message_data['results'][0]['error']  if success == 0
+              else   #format is plain text
                 message_data = response[:message]
                 error = response[:message].split('=')[1]
               end
+
+
               case error
                 when "MissingRegistration"
                   ex = Gcm::Errors::MissingRegistration.new(response[:message])
