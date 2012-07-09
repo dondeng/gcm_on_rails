@@ -1,19 +1,135 @@
-= gcm_on_rails
+h1. Gcm on Rails (Google Cloud Messaging for Android on Rails)
 
-Description goes here.
+gcm_on_rails is a Ruby on Rails gem that allows you to easily incorporate Google's 'Google Cloud Messaging for Android'
+into your Rails application. This gem was derived from c2dm_on_rails (https://github.com/pimeys/c2dm_on_rails) after
+Google deprecated C2DM on June 27, 2012
 
-== Contributing to gcm_on_rails
- 
-* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
-* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
-* Fork the project.
-* Start a feature/bugfix branch.
-* Commit and push until you are happy with your contribution.
-* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
-* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+h2. Acknowledgements:
 
-== Copyright
+This gem was derived from Julius de Bruijn's gem c2dm_on_rails which according to him was originally a rewrite of the
+gem apn_on_rails written by Mark Bates and before him Fabien Penso and Sam Soffes. Thanks to all the above who were
+involved in earlier versions or derivatives of the gem. I originally wanted to use the c2dm_on_rails gem for a project
+at Kopo Kopo, Inc when the rug was pulled from under me when Google pulled C2DM in favor of GCM (Google Cloud Messaging).
+I thus decided to create an updated gem. This is also my first rubygem so please feel free to fix or add on anything you
+may see fit.
 
-Copyright (c) 2012 Dennis Ondeng. See LICENSE.txt for
-further details.
+h2. Requirements:
+
+You will have to sign up to GCM first via the Google APIs Console page (https://code.google.com/apis/console).
+When you greate an new API project, the browser url will change to something like:
+
+<pre><code>
+https://code.google.com/apis/console/#project:4815162342
+</code></pre>
+
+The value after #project (4815162342) in this example is the project ID and will be used later on as the GCM sender
+ID. You will also need to obtain an Api Key and for detailed instructions on how to get one, follow the instructions
+here:-
+
+"http://developer.android.com/guide/google/gcm/gs.html":http://developer.android.com/guide/google/gcm/gs.html
+
+GCM is designed to work on Android version 2.2 or greater, so only Android 2.2> devices are eligible. The device must
+also have an active Google Account if the Android version is less than version 4.1
+
+h2. Insalling:
+
+Installation is by simply adding the following to your Gemfile:
+<pre><code>
+   gem 'gcm_on_rails'
+</code></pre>
+
+h2. Setup and Configuration
+
+The following needs to be added to your Rakefile so that you can use the the Rake tasks that ship with gcm_on_rails:
+
+<pre><code>
+  begin
+    require 'gcm_on_rails_tasks'
+  rescue MissingSourceFile => e
+    puts e.message
+  end
+</code></pre>
+
+To create the tables needed for Gcm on Rails, run the following task:
+
+<pre><code>
+  $ rails generate gcm_migrations
+</code></pre>
+
+Gcm on Rails like its predecessor uses the Configatron gem, "http://github.com/markbates/configatron/tree/master":http://github.com/markbates/configatron/tree/master,
+Some settings need to be loaded for configuration purposes. An initialzer script that can be pu in config/initializers/gcm_on_rails.rb
+will suffice. Below is an example of such a script.
+
+<pre><code>
+configatron.gcm_on_rails.api_url = 'https://android.googleapis.com/gcm/send'
+configatron.gcm_on_rails.api_key = 'AAAAAAPPPPPPPIIIIIIIKKKKKEEEEYYYYY'
+configatron.gcm_on_rails.app_name = 'com.yourapppackage.com'
+configatron.gcm_on_rails.delivery_format = 'json'
+</code></pre>
+
+
+That's it, you are now ready to start creating notifications.
+
+h2. Upgrade Notes:
+
+When upgrading to a new version of Gcm on Rails, you should alwasy run:
+
+<pre><code>
+  $ rails generate gcm_migrations
+</code></pre>
+
+That way you are ensured to have the latest version of the database tables needed.
+
+h2. Example:
+
+Please note that a more detailed introduction to GCM is located at "http://developer.android.com/guide/google/gcm/index.html":http://developer.android.com/guide/google/gcm/index.html
+
+<pre><code>
+  $ rails console
+  >> device = Gcm::Device.create(:registration_id => "XXXXXXXXXXXXXXXXXXXXXX")
+  >> notification = Gcm::Notification.new
+  >> notification.device = device
+  >> notification.collapse_key = "updates_available"
+  >> notification.delay_while_idle = true
+  >> notification.data = {:registration_ids => ["RegistrationID"], :data => {:message_text => "Get on cloud nine"}}
+  >> notification.save
+</code></pre>
+
+The following Rake task can then be used to deliver notifications:
+
+<pre><code>
+  $ rake gcm:notifications:deliver
+</code></pre>
+
+The rake task will look for any unsent notifications from in the database. If found, the notifications will then be dispatched
+for delivery. If no unsent notifications exist, the Rake task simply does nothing. As described by Google possible errors
+from Google are:
+
+|Code 200| |
+| |Error: MissingRegistration. Happens when the request did not actually contain a registration_id parameter when in plain text format or registration_ids when in json format.|
+| |Error: InvalidRegistration. The registration_id passed is not on the GCM servers. The device and all of its notifications will be deleted.|
+| |Error: MismatchedSenderId. The sender Id that was passed is not one that the application specified as an allowed sender.|
+| |Error: NotRegistered. An existing registration Id has ceased to be valid. The device and all of tis notifications will be deleted.|
+| |Error: MessageTooBig. The total payload data that is in the message exceeds 4096 bytes.|
+
+|Code 401| |
+| |API Key is Invalid. Check the configatron file/|
+
+|Code 503| |
+| |Service is unavailable and you should retry later. However, you must honor the 'Retry-After' header if it is included in the response from the GCM server.
+   Exponential backoff should be implemented in your retry mechanism.|
+
+|Code 500| |
+| |Internal server error. Retry again while still honoring 'Retry-After' header and using exponential backoff.|
+
+
+h2. To-Dos:
+
+- Tests, tests then some more tests. These need to be implemented.
+- Implement "broadcasting" sending and processing responses to multiple registration id's within one request. Currently only one
+  message to a single registration id is implemented.
+
+
+Released under the MIT license.
+Copyright (c) 2012 Dennis Ondeng. See LICENSE.txt for further details.
 
