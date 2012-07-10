@@ -1,8 +1,6 @@
 h1. Gcm on Rails (Google Cloud Messaging for Android on Rails)
 
-Gcm on Rails (gcm_on_rails) is a Ruby on Rails gem that allows you to easily incorporate Google's 'Google Cloud Messaging for Android'
-into your Rails application. This gem was derived from c2dm_on_rails (https://github.com/pimeys/c2dm_on_rails) after
-Google deprecated C2DM on June 27, 2012
+Gcm on Rails (gcm_on_rails) is a Ruby on Rails gem that allows you to easily incorporate Google's 'Google Cloud Messaging for Android' into your Rails application. This gem was derived from c2dm_on_rails (https://github.com/pimeys/c2dm_on_rails) after Google deprecated C2DM on June 27, 2012
 
 h2. Acknowledgements:
 
@@ -16,8 +14,7 @@ may see fit.
 h2. Requirements:
 
 You will have to sign up to GCM first via the Google APIs Console page (https://code.google.com/apis/console).
-When you greate an new API project, the browser url will change to something like:
-
+When you create an new API project, the browser url will change to something like:
 <pre><code>
 https://code.google.com/apis/console/#project:4815162342
 </code></pre>
@@ -41,7 +38,6 @@ Installation is by simply adding the following to your Gemfile:
 h2. Setup and Configuration
 
 The following needs to be added to your Rakefile so that you can use the the Rake tasks that ship with gcm_on_rails:
-
 <pre><code>
   begin
     require 'gcm_on_rails_tasks'
@@ -51,7 +47,6 @@ The following needs to be added to your Rakefile so that you can use the the Rak
 </code></pre>
 
 To create the tables needed for Gcm on Rails, run the following task:
-
 <pre><code>
   $ rails generate gcm_migrations
 </code></pre>
@@ -59,7 +54,6 @@ To create the tables needed for Gcm on Rails, run the following task:
 Gcm on Rails like its predecessor uses the Configatron gem, "http://github.com/markbates/configatron/tree/master":http://github.com/markbates/configatron/tree/master,
 Some settings need to be loaded for configuration purposes. An initialzer script that can be put in config/initializers/gcm_on_rails.rb
 will suffice. Below is an example of such a script.
-
 <pre><code>
 configatron.gcm_on_rails.api_url = 'https://android.googleapis.com/gcm/send'
 configatron.gcm_on_rails.api_key = 'AAAAAAPPPPPPPIIIIIIIKKKKKEEEEYYYYY'
@@ -69,18 +63,15 @@ configatron.gcm_on_rails.delivery_format = 'json'
 
 A couple of notes:
 - The api_key is the api key that you received from Google when signing up for GCM
-- Note that unlike the old C2dm on Rails, GCM on Rails switches to a simple API key for authentication. ClientLogin
-  or OAuth2 tokens will NOT work.
+- Note that unlike the old C2dm on Rails, GCM on Rails switches to a simple API key for authentication. ClientLogin or OAuth2 tokens will NOT work.
 - The app_name is simply the name of the pacakge of your Android app.
-- GCM on Rails message requests can be either be sent in plain text or JSON format. Specify 'json' fro JSON and 'plain_text'
-  for plain text format.
+- GCM on Rails message requests can be either be sent in plain text or JSON format. Specify 'json' fro JSON and 'plain_text' for plain text format.
 
 That's it, you are now ready to start creating notifications.
 
 h2. Upgrade Notes:
 
 When upgrading to a new version of Gcm on Rails, you should alwasy run:
-
 <pre><code>
   $ rails generate gcm_migrations
 </code></pre>
@@ -90,7 +81,6 @@ That way you are ensured to have the latest version of the database tables neede
 h2. Example:
 
 Please note that a more detailed introduction to GCM is located at "http://developer.android.com/guide/google/gcm/index.html":http://developer.android.com/guide/google/gcm/index.html
-
 <pre><code>
   $ rails console
   >> device = Gcm::Device.create(:registration_id => "XXXXXXXXXXXXXXXXXXXXXX")
@@ -103,7 +93,6 @@ Please note that a more detailed introduction to GCM is located at "http://devel
 </code></pre>
 
 The following Rake task can then be used to deliver notifications:
-
 <pre><code>
   $ rake gcm:notifications:deliver
 </code></pre>
@@ -133,8 +122,7 @@ from the GCM servers are:
 h2. To-Do's:
 
 - Tests, tests then some more tests. These need to be implemented.
-- Implement "broadcasting" sending and processing responses to multiple registration id's within one request. Currently only one
-  message to a single registration id is implemented.
+- Implement "broadcasting" sending and processing responses to multiple registration id's within one request. Currently only one message to a single registration id is implemented.
 
 
 Released under the MIT license.
