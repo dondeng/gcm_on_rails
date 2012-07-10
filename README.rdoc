@@ -1,15 +1,15 @@
 h1. Gcm on Rails (Google Cloud Messaging for Android on Rails)
 
-gcm_on_rails is a Ruby on Rails gem that allows you to easily incorporate Google's 'Google Cloud Messaging for Android'
+Gcm on Rails (gcm_on_rails) is a Ruby on Rails gem that allows you to easily incorporate Google's 'Google Cloud Messaging for Android'
 into your Rails application. This gem was derived from c2dm_on_rails (https://github.com/pimeys/c2dm_on_rails) after
 Google deprecated C2DM on June 27, 2012
 
 h2. Acknowledgements:
 
-This gem was derived from Julius de Bruijn's gem c2dm_on_rails which according to him was originally a rewrite of the
+This gem was derived from Julius de Bruijn's gem c2dm_on_rails which according to him, was originally a rewrite of the
 gem apn_on_rails written by Mark Bates and before him Fabien Penso and Sam Soffes. Thanks to all the above who were
 involved in earlier versions or derivatives of the gem. I originally wanted to use the c2dm_on_rails gem for a project
-at Kopo Kopo, Inc when the rug was pulled from under me when Google pulled C2DM in favor of GCM (Google Cloud Messaging).
+at Kopo Kopo, Inc and the rug was pulled from under me when Google deprecated C2DM in favor of GCM (Google Cloud Messaging).
 I thus decided to create an updated gem. This is also my first rubygem so please feel free to fix or add on anything you
 may see fit.
 
@@ -31,7 +31,7 @@ here:-
 GCM is designed to work on Android version 2.2 or greater, so only Android 2.2> devices are eligible. The device must
 also have an active Google Account if the Android version is less than version 4.1
 
-h2. Insalling:
+h2. Installing:
 
 Installation is by simply adding the following to your Gemfile:
 <pre><code>
@@ -57,7 +57,7 @@ To create the tables needed for Gcm on Rails, run the following task:
 </code></pre>
 
 Gcm on Rails like its predecessor uses the Configatron gem, "http://github.com/markbates/configatron/tree/master":http://github.com/markbates/configatron/tree/master,
-Some settings need to be loaded for configuration purposes. An initialzer script that can be pu in config/initializers/gcm_on_rails.rb
+Some settings need to be loaded for configuration purposes. An initialzer script that can be put in config/initializers/gcm_on_rails.rb
 will suffice. Below is an example of such a script.
 
 <pre><code>
@@ -67,6 +67,13 @@ configatron.gcm_on_rails.app_name = 'com.yourapppackage.com'
 configatron.gcm_on_rails.delivery_format = 'json'
 </code></pre>
 
+A couple of notes:
+- The api_key is the api key that you received from Google when signing up for GCM
+- Note that unlike the old C2dm on Rails, GCM on Rails switches to a simple API key for authentication. ClientLogin
+  or OAuth2 tokens will NOT work.
+- The app_name is simply the name of the pacakge of your Android app.
+- GCM on Rails message requests can be either be sent in plain text or JSON format. Specify 'json' fro JSON and 'plain_text'
+  for plain text format.
 
 That's it, you are now ready to start creating notifications.
 
@@ -101,9 +108,9 @@ The following Rake task can then be used to deliver notifications:
   $ rake gcm:notifications:deliver
 </code></pre>
 
-The rake task will look for any unsent notifications from in the database. If found, the notifications will then be dispatched
-for delivery. If no unsent notifications exist, the Rake task simply does nothing. As described by Google possible errors
-from Google are:
+The rake task will look for any unsent notifications in the database. If found, the notifications will then be dispatched
+for delivery. If no unsent notifications exist, the Rake task simply does nothing. As described by Google, possible errors
+from the GCM servers are:
 
 |Code 200| |
 | |Error: MissingRegistration. Happens when the request did not actually contain a registration_id parameter when in plain text format or registration_ids when in json format.|
@@ -123,7 +130,7 @@ from Google are:
 | |Internal server error. Retry again while still honoring 'Retry-After' header and using exponential backoff.|
 
 
-h2. To-Dos:
+h2. To-Do's:
 
 - Tests, tests then some more tests. These need to be implemented.
 - Implement "broadcasting" sending and processing responses to multiple registration id's within one request. Currently only one
