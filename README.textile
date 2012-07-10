@@ -4,12 +4,11 @@ Gcm on Rails (gcm_on_rails) is a Ruby on Rails gem that allows you to easily inc
 
 h2. Acknowledgements:
 
-This gem was derived from Julius de Bruijn's gem c2dm_on_rails which according to him, was originally a rewrite of the
-gem apn_on_rails written by Mark Bates and before him Fabien Penso and Sam Soffes. Thanks to all the above who were
-involved in earlier versions or derivatives of the gem. I originally wanted to use the c2dm_on_rails gem for a project
-at Kopo Kopo, Inc and the rug was pulled from under me when Google deprecated C2DM in favor of GCM (Google Cloud Messaging).
-I thus decided to create an updated gem. This is also my first rubygem so please feel free to fix or add on anything you
-may see fit.
+This gem was derived from Julius de Bruijn's gem c2dm_on_rails which according to him, was originally a rewrite of the gem
+apn_on_rails written by Mark Bates and before him Fabien Penso and Sam Soffes. Thanks to all the above who were involved in
+earlier versions or derivatives of the gem. I originally wanted to use the c2dm_on_rails gem for a project at Kopo Kopo, Inc
+and the rug was pulled from under me when Google deprecated C2DM in favor of GCM (Google Cloud Messaging). I thus decided to
+create an updated gem. This is also my first rubygem so please feel free to fix or add on anything you may see fit.
 
 h2. Requirements:
 
@@ -109,7 +108,7 @@ from the GCM servers are:
 | |Error: MessageTooBig. The total payload data that is in the message exceeds 4096 bytes.|
 
 |Code 401| |
-| |API Key is Invalid. Check the configatron file/|
+| |API Key is Invalid. Check the configuration file|
 
 |Code 503| |
 | |Service is unavailable and you should retry later. However, you must honor the 'Retry-After' header if it is included in the response from the GCM server.
