@@ -31,9 +31,9 @@ module Gcm
         http.use_ssl = true
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
-        resp, dat = http.post(url.path, data, headers)
+        resp = http.post(url.path, data, headers)
 
-        return {:code => resp.code.to_i, :message => dat }
+        return {:code => resp.code.to_i, :message => resp.body }
       end
 
       def open
