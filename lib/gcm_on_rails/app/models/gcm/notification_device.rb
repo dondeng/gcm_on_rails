@@ -8,22 +8,18 @@
 #
 # Example:
 #   Device.create(:registration_id => 'FOOBAR')
-class Gcm::Device < Gcm::Base
-  self.table_name = "gcm_devices"
+class Gcm::NotificationDevice < Gcm::Base
+  self.table_name = "gcm_notification_devices"
 
-  has_many :notifications, :class_name => 'Gcm::Notification', :dependent => :destroy
-  validates_presence_of :registration_id
-  validates_uniqueness_of :registration_id
+  attr_accessible :notification_id, :registration_id
+  belongs_to :notification, :class_name => "Gcm::Notification"
+  validates :registration_id, :presence => true, :uniqueness => { :scope => :notification_id }
+  validates :notification_id, :presence => true
 
-  before_save :set_last_registered_at
+
 
   # The <tt>feedback_at</tt> accessor is set when the
   # device is marked as potentially disconnected from your
   # application by Google.
-  attr_accessor :feedback_at
-
-  private
-  def set_last_registered_at
-    self.last_registered_at = Time.now if self.last_registered_at.nil?
-  end
+  #attr_accessor :feedback_at
 end
