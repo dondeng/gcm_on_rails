@@ -11,6 +11,8 @@
 class Gcm::Device < Gcm::Base
   self.table_name = "gcm_devices"
 
+  attr_accessible :registration_id
+
   has_many :notifications, :class_name => 'Gcm::Notification', :dependent => :destroy
   validates_presence_of :registration_id
   validates_uniqueness_of :registration_id
