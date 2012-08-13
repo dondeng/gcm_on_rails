@@ -16,7 +16,7 @@ module Gcm
                      "Authorization" => "key=#{api_key}"}
 
           data = {:data => notification.data }
-          data = {:collapse_key => notification.collapse_key} unless notification.collapse_key.nil?
+          data = data.merge({:collapse_key => notification.collapse_key}) unless notification.collapse_key.nil?
           data = data.merge({:delay_while_idle => notification.delay_while_idle}) unless notification.delay_while_idle.nil?
           data = data.merge({:time_to_live => notification.time_to_live}) unless notification.time_to_live.nil?
           data = data.merge({:registration_ids => notification.devices_ids})
