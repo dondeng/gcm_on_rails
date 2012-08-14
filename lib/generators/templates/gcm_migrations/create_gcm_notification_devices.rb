@@ -8,7 +8,8 @@ class CreateGcmNotificationDevices < ActiveRecord::Migration # :nodoc:
       t.timestamps
     end
 
-    add_index :gcm_notification_devices, :registration_id, :unique => true
+    add_index :gcm_notification_devices, :registration_id
+    add_index :gcm_notification_devices, [:registration_id,:notification_id], :unique => true, :name => 'index_gcm_notification_devices_on_nid_and_rid'
     add_index :gcm_notification_devices, :notification_id
   end
 
