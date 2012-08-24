@@ -64,7 +64,7 @@ A couple of notes:
 - The api_key is the api key that you received from Google when signing up for GCM
 - Note that unlike the old C2dm on Rails, GCM on Rails switches to a simple API key for authentication. ClientLogin or OAuth2 tokens will NOT work.
 - The app_name is simply the name of the pacakge of your Android app.
-- GCM on Rails message requests can be either be sent in plain text or JSON format. Specify 'json' fro JSON and 'plain_text' for plain text format.
+- GCM on Rails message requests can be either be sent in plain text or JSON format. Specify 'json' for JSON and 'plain_text' for plain text format.
 
 That's it, you are now ready to start creating notifications.
 
