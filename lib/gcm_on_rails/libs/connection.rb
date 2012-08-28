@@ -5,7 +5,8 @@ module Gcm
   module Connection
     class << self
       def send_notification(notification, api_key, format)
-
+        logger.debug("notification = #{notification}")
+        logger.debug("api_key = #{api_key}")
         if format == 'json'
           headers = {"Content-Type" => "application/json",
                      "Authorization" => "key=#{api_key}"}
