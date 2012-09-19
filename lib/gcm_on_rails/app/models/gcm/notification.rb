@@ -33,9 +33,7 @@ class Gcm::Notification < Gcm::Base
         api_key = Gcm::Connection.open
         if api_key
           notifications.each do |notification|
-            puts "sending notification #{notification.id} to device #{notification.device.registration_id} with api_key #{api_key}"
             response = Gcm::Connection.send_notification(notification, api_key, format)
-            puts "response: #{response[:code]}; #{response.inspect}"
             if response[:code] == 200
               if format == "json"
                 error = ""
