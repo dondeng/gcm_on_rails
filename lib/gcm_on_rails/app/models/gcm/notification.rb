@@ -33,7 +33,9 @@ class Gcm::Notification < Gcm::Base
         api_key = Gcm::Connection.open
         if api_key
           notifications.each do |notification|
+            logger.info "notification = #{notification.inspect}"
             response = Gcm::Connection.send_notification(notification, api_key, format)
+            logger.info "response = #{response.inspect}"
             if response[:code] == 200 && !response[:message].nil?
               if format == "json"
                 error = ""
