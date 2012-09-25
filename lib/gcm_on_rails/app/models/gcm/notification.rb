@@ -36,8 +36,8 @@ class Gcm::Notification < Gcm::Base
             logger.info "notification = #{notification.inspect}"
             response = Gcm::Connection.send_notification(notification, api_key, format)
             logger.info "response = #{response.inspect}"
-            if response[:code] == 200 && !response[:message].nil?
-              if format == "json"
+            if response[:code] == 200
+              if format == "json" && !response[:message].nil?
                 error = ""
                 puts "Response is #{response.inspect}"
                 message_data = JSON.parse response[:message]
