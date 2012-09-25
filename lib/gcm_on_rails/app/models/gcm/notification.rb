@@ -37,7 +37,7 @@ class Gcm::Notification < Gcm::Base
             if response[:code] == 200
               if format == "json"
                 error = ""
-                puts "Message is #{:message.inspect}"
+                puts "Response is #{:response.inspect}"
                 message_data = JSON.parse response[:message]
                 success = message_data['success']
                 error = message_data['results'][0]['error']  if success == 0
