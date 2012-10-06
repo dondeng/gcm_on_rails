@@ -39,7 +39,12 @@ class Gcm::Notification < Gcm::Base
             if response[:code] == 200
               if format == "json"
                 error = ""
-                message_data = JSON.parse response[:message]
+                if response[:message].nil?
+                  message_data = Hash.new
+                  message_data['success'] = 1
+                else
+                  message_data = JSON.parse(response[:message])
+                end
                 success = message_data['success']
                 error = message_data['results'][0]['error']  if success == 0
               else   #format is plain text
