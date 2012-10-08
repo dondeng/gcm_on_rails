@@ -40,18 +40,21 @@ class Gcm::Notification < Gcm::Base
         api_key = Gcm::Connection.open
         if api_key
           notifications.each do |notification|
-            puts "sending notification #{notification.id} to device #{notification.device.registration_id}"
+
+            logger.info "notification = #{notification.inspect}"
             response = Gcm::Connection.send_notification(notification, api_key, format)
-            puts "response: #{response[:code]}; #{response.inspect}"
-            # Sample respnose as received from Google
-            #
+            logger.info "response = #{response.inspect}"
+
             if response[:code] == 200
-              if format == "json"
+              if response[:message].nil?
+                error = "success"
+              elsif format == "json"
                 error = ""
+                puts "Response is #{response.inspect}"
                 message_data = JSON.parse response[:message]
                 success = message_data['success']
                 error = message_data['results'][0]['error']  if success == 0
-              else   #format is plain text
+              elsif format == "plain_text"   #format is plain text
                 message_data = response[:message]
                 error = response[:message].split('=')[1]
               end
