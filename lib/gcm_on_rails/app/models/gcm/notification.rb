@@ -47,10 +47,11 @@ class Gcm::Notification < Gcm::Base
 
             if response[:code] == 200
               if response[:message].nil?
+                # TODO - Making this assumption might not be right. HTTP status code 200 does not really signify success
+                # if Gcm servers returned nil for the message
                 error = "success"
               elsif format == "json"
                 error = ""
-                puts "Response is #{response.inspect}"
                 message_data = JSON.parse response[:message]
                 success = message_data['success']
                 error = message_data['results'][0]['error']  if success == 0
