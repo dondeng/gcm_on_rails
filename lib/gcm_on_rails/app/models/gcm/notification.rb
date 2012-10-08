@@ -21,6 +21,13 @@ class Gcm::Notification < Gcm::Base
     #
     # This can be run from the following Rake task:
     #   $ rake gcm:notifications:deliver
+    #
+    # Below is sample successful response as received from Google servers when the format is JSON
+    #
+    # response: 200;
+    # {:message=>"{\"multicast_id\":6085691036338669615,\"success\":1,\"failure\":0,\"canonical_ids\":0,\"results\":[{\"message_id\":\"0:1349723376618187%d702725e98d39af3\"}]}", :code=>200}
+    #
+    #
     def send_notifications(notifications = Gcm::Notification.all(:conditions => {:sent_at => nil}, :joins => :device, :readonly => false))
 
       if configatron.gcm_on_rails.delivery_format and configatron.gcm_on_rails.delivery_format == 'plain_text'
@@ -33,9 +40,11 @@ class Gcm::Notification < Gcm::Base
         api_key = Gcm::Connection.open
         if api_key
           notifications.each do |notification|
-            #puts "sending notification #{notification.id} to device #{notification.device.registration_id}"
+            puts "sending notification #{notification.id} to device #{notification.device.registration_id}"
             response = Gcm::Connection.send_notification(notification, api_key, format)
-            #puts "response: #{response[:code]}; #{response.inspect}"
+            puts "response: #{response[:code]}; #{response.inspect}"
+            # Sample respnose as received from Google
+            #
             if response[:code] == 200
               if format == "json"
                 error = ""
