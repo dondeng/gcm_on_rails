@@ -84,7 +84,7 @@ Please note that a more detailed introduction to GCM is located at "http://devel
   $ rails console
   >> device = Gcm::Device.create(:registration_id => "XXXXXXXXXXXXXXXXXXXXXX")
   >> notification = Gcm::Notification.new
-  >> notification.device = device
+  >> notification.devices << device
   >> notification.collapse_key = "updates_available"
   >> notification.delay_while_idle = true
   >> notification.data = {:registration_ids => ["RegistrationID"], :data => {:message_text => "Get on cloud nine"}}

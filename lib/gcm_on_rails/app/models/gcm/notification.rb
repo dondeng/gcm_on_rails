@@ -5,7 +5,7 @@ class Gcm::Notification < Gcm::Base
   extend ::ActionView::Helpers::TextHelper
   serialize :data
 
-  belongs_to :device, :class_name => 'Gcm::Device'
+  has_and_belongs_to_many :devices, :class_name => 'Gcm::Device', :join_table => :gcm_devices_notifications
   validates_presence_of :collapse_key if :time_to_live?
 
   class << self
@@ -28,7 +28,7 @@ class Gcm::Notification < Gcm::Base
     # {:message=>"{\"multicast_id\":6085691036338669615,\"success\":1,\"failure\":0,\"canonical_ids\":0,\"results\":[{\"message_id\":\"0:1349723376618187%d702725e98d39af3\"}]}", :code=>200}
     #
     #
-    def send_notifications(notifications = Gcm::Notification.all(:conditions => {:sent_at => nil}, :joins => :device, :readonly => false))
+    def send_notifications(notifications = Gcm::Notification.all(:conditions => {:sent_at => nil}, :include => :devices, :readonly => false))
 
       if configatron.gcm_on_rails.delivery_format and configatron.gcm_on_rails.delivery_format == 'plain_text'
         format = "plain_text"
