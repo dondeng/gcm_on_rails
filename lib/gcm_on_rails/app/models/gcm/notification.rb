@@ -65,18 +65,18 @@ class Gcm::Notification < Gcm::Base
                 when "MissingRegistration"
                   ex = Gcm::Errors::MissingRegistration.new(response[:message])
                   logger.warn("#{ex.message}, destroying gcm_device with id #{notification.device.id}")
-                  notification.device.destroy
+                  notification.device.try(:destroy)
                 when "InvalidRegistration"
                   ex = Gcm::Errors::InvalidRegistration.new(response[:message])
                   logger.warn("#{ex.message}, destroying gcm_device with id #{notification.device.id}")
-                  notification.device.destroy
+                  notification.device.try(:destroy)
                 when "MismatchedSenderId"
                   ex = Gcm::Errors::MismatchSenderId.new(response[:message])
                   logger.warn(ex.message)
                 when "NotRegistered"
                   ex = Gcm::Errors::NotRegistered.new(response[:message])
                   logger.warn("#{ex.message}, destroying gcm_device with id #{notification.device.id}")
-                  notification.device.destroy
+                  notification.device.try(:destroy)
                 when "MessageTooBig"
                   ex = Gcm::Errors::MessageTooBig.new(response[:message])
                   logger.warn(ex.message)
