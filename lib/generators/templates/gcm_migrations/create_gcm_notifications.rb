@@ -8,6 +8,7 @@ class CreateGcmNotifications < ActiveRecord::Migration # :nodoc:
       t.boolean :delay_while_idle
       t.datetime :sent_at
       t.integer :time_to_live
+      t.string :notification_type
       t.timestamps
     end
 
