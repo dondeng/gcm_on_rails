@@ -1,7 +1,7 @@
 namespace :gcm do
   namespace :notifications do
 
-    desc "Deliver all unsent Gcm notifications."
+    desc "Deliver unsent Gcm notifications of the specified type."
     task :deliver, [:type] => [:environment] do |t, args|
       if args.type.nil?
         Gcm::Notification.send_notifications

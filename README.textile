@@ -70,10 +70,15 @@ That's it, you are now ready to start creating notifications.
 
 h2. Upgrade Notes:
 
-When upgrading to a new version of Gcm on Rails, you should alwasy run:
-<pre><code>
-  $ rails generate gcm_migrations
-</code></pre>
+h3. Upgrading to 0.1.4
+
+When upgrading from version 0.1.3 to 0.1.4 you should run:
+<pre><code>$ rails generate gcm_upgrade</code></pre>
+
+h3. Upgrading to <= 0.1.3
+
+When upgrading to a new version of Gcm on Rails, you should always run:
+<pre><code>$ rails generate gcm_migrations</code></pre>
 
 That way you are ensured to have the latest version of the database tables needed.
 

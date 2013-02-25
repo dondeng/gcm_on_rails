@@ -1,7 +1,6 @@
 class CreateGcmDevicesNotifications < ActiveRecord::Migration # :nodoc:
 
   def self.up
-
     create_table :gcm_devices_notifications, :id => false do |t|
       t.integer :device_id, :null => false
       t.integer :notification_id, :null => false
