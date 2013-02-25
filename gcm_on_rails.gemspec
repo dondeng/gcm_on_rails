@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "gcm_on_rails"
-  s.version = "0.1.3"
+  s.version = "0.1.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Dennis Ondeng"]
@@ -35,6 +35,7 @@ Gem::Specification.new do |s|
     "lib/gcm_on_rails_tasks.rb",
     "lib/generators/gcm_migrations_generator.rb",
     "lib/generators/templates/gcm_migrations/create_gcm_devices.rb",
+    "lib/generators/templates/gcm_migrations/create_gcm_devices_notifications.rb",
     "lib/generators/templates/gcm_migrations/create_gcm_notifications.rb"
   ]
   s.homepage = "http://github.com/dondeng/gcm_on_rails"

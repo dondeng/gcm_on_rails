@@ -84,14 +84,25 @@ Please note that a more detailed introduction to GCM is located at "http://devel
   $ rails console
   >> device = Gcm::Device.create(:registration_id => "XXXXXXXXXXXXXXXXXXXXXX")
   >> notification = Gcm::Notification.new
-  >> notification.device = device
+  >> notification.devices << device
   >> notification.collapse_key = "updates_available"
   >> notification.delay_while_idle = true
-  >> notification.data = {:registration_ids => ["RegistrationID"], :data => {:message_text => "Get on cloud nine"}}
+  >> notification.data = {:data => {:message_text => "Get on cloud nine"}}
+  >> notification.notification_type = "urgent"
   >> notification.save
 </code></pre>
+In this version you don't have to add the registration ids of the devices you're going to send the notifications. You just add them to notifications_devices relation by doing:
+<pre><code>
+  >> notification.devices << device
+</code></pre>
+as it was shown in the previous example.
 
-The following Rake task can then be used to deliver notifications:
+The following Rake task can then be used to deliver urgent notifications:
+<pre><code>
+  $ rake gcm:notifications:deliver["urgent"]
+</code></pre>
+
+If you want to deliver every notification that wasn't delivered yet:
 <pre><code>
   $ rake gcm:notifications:deliver
 </code></pre>
@@ -128,7 +139,7 @@ h2. To-Do's:
   in the message object of the return json.
 
 - Tests, tests then some more tests. These need to be implemented.
-- Implement "broadcasting" sending and processing responses to multiple registration id's within one request. Currently only one message to a single registration id is implemented.
+- Implement some sort of mechanism to update from previous versions
 
 
 Released under the MIT license.
