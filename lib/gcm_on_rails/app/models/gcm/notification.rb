@@ -91,7 +91,7 @@ class Gcm::Notification < Gcm::Base
                     ex = Gcm::Errors::MessageTooBig.new(response[:message])
                     logger.warn(ex.message)
                   else
-                    #notification.sent_at = Time.now
+                    notification.sent_at = Time.now
                     notification.save!
                 end
               elsif response[:code] == 401
