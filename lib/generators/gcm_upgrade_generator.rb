@@ -1,10 +1,8 @@
 require 'rails/generators/active_record'
-# Generates the migrations necessary for Gcm on Rails.
-# This should be run upon install and upgrade of the
-# Gcm on Rails gem.
+# Generates the migrations necessary for upgrading Gcm on Rails.
 #
-#   $ ruby script/generate gcm_migrations
-class GcmMigrationsGenerator < Rails::Generators::Base
+#   $ ruby script/generate gcm_upgrade
+class GcmUpgradeGenerator < Rails::Generators::Base
   include Rails::Generators::Migration
   extend ActiveRecord::Generators::Migration
 
@@ -17,9 +15,9 @@ class GcmMigrationsGenerator < Rails::Generators::Base
 
   def create_migrations
     templates = {
-      'create_gcm_devices.rb' => 'db/migrate/create_gcm_devices.rb',
-      'create_gcm_notifications.rb' => 'db/migrate/create_gcm_notifications.rb',
-      'create_gcm_devices_notifications.rb' => 'db/migrate/create_gcm_devices_notifications.rb'
+      'remove_device_notifications_column.rb' => 'db/migrate/remove_device_notifications_column.rb',
+      'create_gcm_devices_notifications.rb' => 'db/migrate/create_gcm_devices_notifications.rb',
+      'add_notification_type_column.rb' => 'db/migrate/add_notification_type_column.rb'
     }
 
     templates.each_pair do |name, path|
@@ -30,4 +28,4 @@ class GcmMigrationsGenerator < Rails::Generators::Base
       end
     end
   end
-end # GcmMigrationsGenerator
+end # GcmUpgradeGenerator
