@@ -4,6 +4,13 @@ require 'uri'
 module Gcm
   module Errors
 
+    # Invalid JSON
+    class InvalidJSON < StandardError
+      def initialize(message) # :nodoc:
+        super("Invalid JSON: '#{message}'")
+      end
+    end
+
     # Missing registration_id.
     class MissingRegistration < StandardError
       def initialize(message) # :nodoc:
