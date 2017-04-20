@@ -6,7 +6,7 @@ class Gcm::Notification < Gcm::Base
   serialize :data
 
   belongs_to :device, :class_name => 'Gcm::Device'
-  validates_presence_of :collapse_key if :time_to_live?
+  validates_presence_of :collapse_key, if: :time_to_live?
 
   class << self
     # Opens a connection to the Google GCM server and attempts to batch deliver
